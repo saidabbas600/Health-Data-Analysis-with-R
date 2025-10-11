@@ -1,0 +1,17 @@
+library(tidyverse); library(NHANES); data("NHANES")
+
+# Histogram: BMI
+ggplot(NHANES, aes(x = BMI)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Body Mass Index (BMI)", x = "BMI", y = "Count")
+
+# Boxplot: BMI by Diabetes
+ggplot(NHANES, aes(x = Diabetes, y = BMI, fill = Diabetes)) +
+  geom_boxplot() +
+  labs(title = "BMI by Diabetes Status", x = "Diabetes", y = "BMI")
+
+# Physical activity boxplot by gender (adult_data should be defined)
+ggplot(adult_data, aes(x = gender, y = phys_active_days, fill = gender)) +
+  geom_boxplot() +
+  labs(title = "Physical Activity Days by Gender", x = "Gender", y = "Physically Active Days") +
+  theme_minimal()
