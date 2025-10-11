@@ -1,0 +1,24 @@
+# ensure dataset loaded
+data("NHANES")
+
+# Check missing in key vars
+colSums(is.na(NHANES[, c("Gender", "BMI")]))
+
+# Keep only complete cases for Gender & BMI
+nhanes_clean <- NHANES %>% filter(!is.na(Gender) & !is.na(BMI))
+
+# Summary statistics of BMI by gender
+nhanes_clean %>%
+  group_by(Gender) %>%
+  summarise(
+    Mean_BMI = mean(BMI, na.rm = TRUE),
+    Median_BMI = median(BMI, na.rm = TRUE),
+    SD_BMI = sd(BMI, na.rm = TRUE),
+    Count = n()
+  )
+
+# Histogram of BMI
+ggplot(nhanes_clean, aes(x = BMI, fill = Gender)) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5) +
+  labs(title = "BMI Distribution by Gender", x = "BMI", y = "Frequency") +
+  theme_minimal()
