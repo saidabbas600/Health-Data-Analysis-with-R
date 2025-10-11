@@ -1,0 +1,11 @@
+# Simulate longitudinal data example (illustrative)
+long_data <- data.frame(
+  ID = rep(1:50, each = 3),
+  Year = rep(c(2018, 2019, 2020), times = 50),
+  BMI = round(rnorm(150, mean = 25, sd = 3) + rep(c(0, 0.5, 1), times = 50), 2)
+)
+
+# Mixed-effects model (requires lme4)
+library(lme4)
+lmer_model <- lmer(BMI ~ Year + (1 | ID), data = long_data)
+summary(lmer_model)
