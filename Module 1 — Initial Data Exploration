@@ -1,0 +1,26 @@
+# install once (if needed)
+install.packages(c("tidyverse","janitor","survey","NHANES"))
+
+# load libraries
+library(tidyverse)
+library(janitor)
+library(NHANES)
+
+# load and clean
+data("NHANES")
+NHANES <- NHANES %>% clean_names()
+
+# inspect
+glimpse(NHANES)
+summary(NHANES)
+
+# Filter for adults
+adult_data <- NHANES %>% filter(age >= 18)
+
+# Missing values per column (sorted)
+colSums(is.na(adult_data)) %>% sort(decreasing = TRUE)
+
+# Unique value counts for a few categorical vars
+adult_data %>%
+  select(gender, race1, marital_status, education) %>%
+  summarise_all(~n_distinct(.))
