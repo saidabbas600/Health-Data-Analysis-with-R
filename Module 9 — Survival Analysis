@@ -1,0 +1,17 @@
+# survival analysis template
+install.packages(c("survival", "survminer"))
+library(survival); library(survminer)
+
+# Example: assume 'surv_data' has columns: time, status (1=event,0=censor), group
+# surv_data <- ... (prepare your dataset)
+
+# create survival object
+surv_obj <- Surv(time = surv_data$time, event = surv_data$status)
+
+# fit Kaplan-Meier by group
+fit_km <- survfit(surv_obj ~ group, data = surv_data)
+ggsurvplot(fit_km, data = surv_data, pval = TRUE, conf.int = TRUE)
+
+# Cox proportional hazards model
+cox_fit <- coxph(surv_obj ~ age + bmi + group, data = surv_data)
+summary(cox_fit)
