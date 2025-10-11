@@ -1,0 +1,32 @@
+library(tidyverse); library(NHANES); data("NHANES")
+
+# filter for required vars
+nhanes_clean <- NHANES %>%
+  filter(!is.na(BMI), !is.na(Gender), !is.na(Diabetes), !is.na(Age), !is.na(Depressed), !is.na(PhysActive))
+
+# Descriptive by gender
+nhanes_clean %>%
+  group_by(Gender) %>%
+  summarise(Mean_BMI = mean(BMI, na.rm=TRUE), Median_BMI = median(BMI, na.rm=TRUE), SD_BMI = sd(BMI, na.rm=TRUE), Count = n())
+
+# t-test: BMI by Gender
+t.test(BMI ~ Gender, data = nhanes_clean)
+
+# ANOVA: BMI by physical activity
+aov_result <- aov(BMI ~ PhysActive, data = nhanes_clean)
+summary(aov_result)
+
+# Correlation: Age vs BMI
+cor.test(nhanes_clean$Age, nhanes_clean$BMI)
+
+# Linear regression
+lm(BMI ~ Age, data = nhanes_clean)
+
+# Logistic regression example (diabetes ~ age + bmi)
+logit_model <- glm(Diabetes ~ Age + BMI, data = nhanes_clean, family = binomial)
+summary(logit_model)
+exp(coef(logit_model))  # odds ratios
+
+# Chi-square: gender vs diabetes
+table_data <- table(nhanes_clean$Gender, nhanes_clean$Diabetes)
+chisq.test(table_data)
