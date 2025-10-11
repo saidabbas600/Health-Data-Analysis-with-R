@@ -1,0 +1,14 @@
+# basic train/test split
+set.seed(123)
+split_index <- sample(1:nrow(model_data), 0.7 * nrow(model_data))
+train_data <- model_data[split_index, ]
+test_data  <- model_data[-split_index, ]
+
+# random forest (requires randomForest package)
+library(randomForest)
+rf_model <- randomForest(Diabetes ~ Age + BMI + PhysActive, data = train_data)
+print(rf_model)
+
+# predict & evaluate
+preds <- predict(rf_model, newdata = test_data, type = "response")
+table(preds, test_data$Diabetes)
