@@ -1,0 +1,18 @@
+# Example: exposure = PhysActive (active vs inactive), outcome = Diabetes
+
+# build contingency table (ensure recoding to binary as needed)
+contingency_table <- table(epi_data$active_bin, epi_data$diabetes_bin)  # epi_data must be prepared
+
+# Prevalences
+prevalence_active   <- contingency_table[2,2] / sum(contingency_table[2,])
+prevalence_inactive <- contingency_table[1,2] / sum(contingency_table[1,])
+risk_ratio <- prevalence_active / prevalence_inactive
+risk_ratio
+
+# Odds ratio (from 2x2 table)
+a <- contingency_table[2,2]
+b <- contingency_table[2,1]
+c <- contingency_table[1,2]
+d <- contingency_table[1,1]
+odds_ratio <- (a * d) / (b * c)
+odds_ratio
