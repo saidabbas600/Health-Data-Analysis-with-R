@@ -1,0 +1,35 @@
+library(tidyverse)
+library(NHANES)
+data("NHANES")
+
+# Select lab and demographic subsets
+lab_data  <- NHANES %>% select(ID, BMI, TotChol)
+demo_data <- NHANES %>% select(ID, Age, Gender)
+
+# sanity checks
+sum(is.na(lab_data$ID))
+sum(is.na(demo_data$ID))
+
+# merge (left join)
+merged_data <- left_join(lab_data, demo_data, by = "ID")
+
+# quick summary and missing counts
+summary(merged_data)
+colSums(is.na(merged_data))
+
+# reshape wide -> long for measures
+long_data <- pivot_longer(
+  merged_data,
+  cols = c(BMI, TotChol),
+  names_to = "Measure",
+  values_to = "Value"
+)
+
+# preview & visualization
+head(long_data)
+ggplot(long_data, aes(x = Gender, y = Value, fill = Measure)) +
+  geom_boxplot() +
+  facet_wrap(~Measure, scales = "free_y") +
+  labs(title = "Distribution of BMI and Total Cholesterol by Gender",
+       x = "Gender", y = "Value") +
+  theme_minimal()
